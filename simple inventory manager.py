@@ -4,25 +4,15 @@ Create an application which manages an inventory of products.
 Create a product class which has a price, id, and quantity on hand.
 Then create an inventory class which keeps track of various products and can sum up the inventory value.
 """
-
-"""
-Goal for tomorrow. 
-Implement the manager class
-    - Will be able to create product objects through the manager class
-    - Will be able to access the inventory class
-    - Will also be able to change the price and quantity of objects
-
-Add commenting
-    - Comment your code so that it becomes readable before making the code public to github for any feedback :)
-"""
 from datetime import datetime
 import os
 
-class product:
+
+class Product:
     def __init__(self, price, id, quantity):
         self.price = price
         self.id = id.lower()
-        self.quantity = quantity
+        self.quantity = int(quantity)
 
     def change_price(self, new_price):
         if isinstance(new_price, float) == False:
@@ -81,7 +71,7 @@ class Inventory:
         self.products = products if products is not None else []
 
     def add_product(self, new_product):
-        if isinstance(new_product, product) == True:
+        if isinstance(new_product, Product) == True:
             self.products.append(new_product)
     
     def remove_product(self):
@@ -155,22 +145,113 @@ class Inventory:
     def __str__(self):
         return "\n".join(str(i) for i in self.products)
 
+    def __len__(self):
+        return len(self.products)
+
 
 class Manager:
     def __init__(self):
         self.manager_inventory = Inventory()
+        self.main_menu()
+
+    def main_menu(self):
+        print("="*33)
+        print(str(self.manager_inventory))
+        print("="*33)
+        print("Main Menu")
+        print("1 to add product")
+        print("2 to change price")
+        print("3 to change quantity")
+        print("4 to remove a product")
+        print("5 to create a report")
+        print("6 to delete previous report")
+        print("7 to end program")
+        user_choice = int(input("Please enter your choice: "))
+        match user_choice:
+            case 1:
+                self.add_product()
+            case 2:
+                self.price_change()
+            case 3:
+                self.quantity_change()
+            case 4:
+                self.product_remove()
+            case 5:
+                self.report_create()
+            case 6:
+                self.report_delete()
+            case 7:
+                quit()
+
+    def add_product(self):
+        product_id = 1
+        while not isinstance(product_id, str):
+            product_id = input("Please enter the product name: ")
+        product_price = "ab"
+        while not isinstance(product_price, float):
+            try:
+                product_price = float(input("Please enter the price of the product: "))
+            except ValueError:
+                print("Please enter a number for the price")
+        product_quantity = "ab"
+        while not isinstance(product_quantity, float):
+            try:
+                product_quantity = float(input("Please enter the quantity of the product: "))
+            except ValueError:
+                print("Please enter a number for the price")
+        
+        new_product = Product(product_price, product_id, product_quantity)
+        self.manager_inventory.add_product(new_product)
+        self.main_menu()
+        
+    def price_change(self):
+        if len(self.manager_inventory) == 0:
+            print("\nYou must first add a product!\n")
+            self.main_menu()
+        product_to_change = 10
+        while not isinstance(product_to_change, str):
+            product_to_change = input("Which product should be changed? ")
+        price_into = "ab"
+        while not isinstance(price_into, float):
+            try:
+                price_into = float(input("What price should it be? "))
+            except ValueError:
+                pass
+        product_class = self.manager_inventory.search_product(product_to_change)
+        product_class.change_price(price_into)
+        self.main_menu()
     
-#    def add_product(self):
+    def quantity_change(self):
+        if len(self.manager_inventory) == 0:
+            print("\nYou must first add a product!\n")
+            self.main_menu()
+        product_to_change = 10
+        while not isinstance(product_to_change, str):
+            product_to_change = input("Which product should be changed? ")
+        quantity_into = "ab"
+        while not isinstance(quantity_into, int):
+            try:
+                quantity_into = int(input("What should be the new quantity? "))
+            except ValueError:
+                pass
+        product_class = self.manager_inventory.search_product(product_to_change)
+        product_class.change_quantity(quantity_into)
+
+    def product_remove(self):
+        if len(self.manager_inventory) == 0:
+            print("\nYou must first add a product!\n")
+            self.main_menu()
+        self.manager_inventory.remove_product()
+        self.main_menu()
+
+    def report_create(self):
+        self.manager_inventory.create_report()
+        self.main_menu()
     
-#    def change_price(self):
-    
-#    def change_quantity(self):
-    
+    def report_delete(self):
+        self.manager_inventory.delete_report()
+        self.main_menu()
 
 
-p1 = product(10.99, "bread", 5)
-p2 = product(9.99, "pie", 5)
-i = Inventory()
-i.add_product(p1)
-i.add_product(p2)
-i.delete_report()
+if __name__ == "__main__":
+    k = Manager()
