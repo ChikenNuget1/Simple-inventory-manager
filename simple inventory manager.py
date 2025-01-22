@@ -134,6 +134,7 @@ class Inventory:
         f.write("="*33)
         f.write("\n")
         f.write(f"Total inventory value is ${total_value}")
+        f.close()
 
     def delete_report(self):
         if os.path.exists("inventory_report.txt"):
